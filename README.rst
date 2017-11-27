@@ -13,3 +13,28 @@ Conreality Software Development Kit (SDK) for C++
 |
 
 https://sdk.conreality.org/cxx/
+
+Installation
+============
+
+Installation from Source Code
+-----------------------------
+
+::
+
+   $ ./autogen.sh   # only needed for the development version from Git
+
+   $ ./configure
+
+   $ make
+
+   $ sudo make install
+
+See Also
+========
+
+* `Conreality Game Development Kit (GDK)
+  <https://github.com/conreality/conreality-gdk>`__
+
+* `Conreality Driver Development Kit (DDK) for C++
+  <https://github.com/conreality/conreality-ddk>`__

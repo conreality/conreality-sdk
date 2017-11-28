@@ -54,6 +54,7 @@ AM_CONDITIONAL([ENABLE_DEBUG], [test "x$enable_debug" != "xno"])
 dnl Check for programs:
 AC_PROG_CXX(clang++ g++ c++)
 AC_PROG_CXXCPP
+AX_CXX_COMPILE_STDCXX([14], [noext])
 AC_LANG([C++])
 m4_ifdef([AM_PROG_AR], [AM_PROG_AR])
 AC_CHECK_PROGS([PANDOC], [pandoc])

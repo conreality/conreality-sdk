@@ -14,6 +14,28 @@ Conreality Software Development Kit (SDK) for C++
 
 https://sdk.conreality.org/cxx/
 
+Prerequisites
+=============
+
+Build Prerequisites
+-------------------
+
+* Clang_ (>= 3.4) or GCC_ (>= 5.0)
+* `GNU Autoconf`_ (>= 2.69)
+* `GNU Automake`_ (>= 1.15)
+* `GNU Make`_ (>= 3.81)
+* pkg-config_ (>= 0.29)
+
+.. _Clang:        https://clang.llvm.org/
+.. _GCC:          https://gcc.gnu.org/
+.. _GNU Autoconf: https://www.gnu.org/software/autoconf/
+.. _GNU Automake: https://www.gnu.org/software/automake/
+.. _GNU Make:     https://www.gnu.org/software/make/
+.. _pkg-config:   https://www.freedesktop.org/wiki/Software/pkg-config/
+
+Dependencies
+============
+
 Installation
 ============
 

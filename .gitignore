@@ -6,6 +6,16 @@
 
 # Editor backup files
 *~
+._*.zig
 
 # Pandoc outputs
 *.html
+
+# Zig artifacts
+zig-cache/
+
+# Build output
+build/
+
+# Distributables
+dist/

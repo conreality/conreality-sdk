@@ -1,0 +1,18 @@
+[submodule "c"]
+	path = c
+	url = https://github.com/conreality/conreality.c.git
+[submodule "cpp"]
+	path = cpp
+	url = https://github.com/conreality/conreality.cpp.git
+[submodule "dart"]
+	path = dart
+	url = https://github.com/conreality/conreality.dart.git
+[submodule "go"]
+	path = go
+	url = https://github.com/conreality/conreality.go.git
+[submodule "python"]
+	path = python
+	url = https://github.com/conreality/conreality.py.git
+[submodule "ruby"]
+	path = ruby
+	url = https://github.com/conreality/conreality.rb.git

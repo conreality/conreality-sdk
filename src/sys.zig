@@ -1,7 +1,6 @@
 // This is free and unencumbered software released into the public domain.
 
 const builtin = @import("builtin");
-const meta = @import("std").meta;
 
 pub usingnamespace switch (builtin.os.tag) {
     .ios, .tvos, .watchos => @import("sys/ios.zig"),
@@ -15,5 +14,6 @@ pub usingnamespace switch (builtin.os.tag) {
 };
 
 test "sys/*" { // zig test --library c --main-pkg-path .. src/sys.zig
+    const meta = @import("std").meta;
     meta.refAllDecls(@This());
 }

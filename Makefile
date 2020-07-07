@@ -1,3 +1,5 @@
+builddir      = build
+
 prefix        = /usr/local
 exec_prefix   = $(prefix)
 libdir        = $(exec_prefix)/lib
@@ -20,7 +22,16 @@ default: all
 
 # Rules for compilation:
 
-all:
+$(builddir):
+	mkdir -p $(builddir)
+
+$(builddir)/$(PACKAGE).pc: $(builddir)
+
+all: pkgconfig
+
+pkgconfig: $(builddir)/$(PACKAGE).pc
+
+include etc/pkgconfig/rules.mk
 
 # Rules for verification:
 
@@ -32,9 +43,11 @@ check:
 
 installdirs:
 	install -d $(DESTDIR)$(libdir)
+	install -d $(DESTDIR)$(libdir)/pkgconfig
 	install -d $(DESTDIR)$(man7dir)
 
-install: installdirs
+install: pkgconfig installdirs
+	install -c -m 0644 $(builddir)/$(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
 	install -c -m 0644 doc/man/man7/$(PACKAGE).7 $(DESTDIR)$(man7dir)
 	@$(MAKE) -C c install
 	@$(MAKE) -C cpp install
@@ -45,8 +58,9 @@ installcheck:
 
 uninstall:
 	-rm -f $(DESTDIR)$(man7dir)/$(PACKAGE).7
-	@$(MAKE) -C c uninstall
+	-rm -f $(DESTDIR)$(libdir)/pkgconfig/$(PACKAGE).pc
 	@$(MAKE) -C cpp uninstall
+	@$(MAKE) -C c uninstall
 
 # Rules for distribution:
 
@@ -60,7 +74,7 @@ doc/man/man7/conreality.7: doc/man/man7/conreality.7.md VERSION
 	sed -e "s:@VERSION@:$(VERSION):;" < $< | $(PANDOC) -s -t man -o $@
 
 clean:
-	@rm -Rf build dist zig-cache *~
+	@rm -Rf $(builddir) build dist zig-cache *~
 
 distclean: clean
 
@@ -68,7 +82,7 @@ mostlyclean: clean
 
 maintainer-clean: clean
 
-.PHONY: default all
+.PHONY: default all pkgconfig
 .PHONY: test check installdirs install installcheck uninstall
 .PHONY: clean distclean mostlyclean maintainer-clean
 .SECONDARY:

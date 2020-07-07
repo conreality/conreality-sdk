@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: conreality
+Description: Conreality Software Development Kit (SDK)
+Version: @VERSION@
+URL: https://sdk.conreality.dev
+Cflags: -I${includedir}
+Libs: -L${libdir} -lconreality

@@ -49,8 +49,8 @@ installdirs:
 install: pkgconfig installdirs
 	install -c -m 0644 $(builddir)/$(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
 	install -c -m 0644 doc/man/man7/$(PACKAGE).7 $(DESTDIR)$(man7dir)
-	@$(MAKE) -C c install
-	@$(MAKE) -C cpp install
+	@[ -f c/Makefile ] && $(MAKE) -C c install || true
+	@[ -f cpp/Makefile ] && $(MAKE) -C cpp install || true
 
 installcheck:
 
@@ -59,8 +59,8 @@ installcheck:
 uninstall:
 	-rm -f $(DESTDIR)$(man7dir)/$(PACKAGE).7
 	-rm -f $(DESTDIR)$(libdir)/pkgconfig/$(PACKAGE).pc
-	@$(MAKE) -C cpp uninstall
-	@$(MAKE) -C c uninstall
+	@[ -f c/Makefile ] && $(MAKE) -C c uninstall || true
+	@[ -f cpp/Makefile ] && $(MAKE) -C cpp uninstall || true
 
 # Rules for distribution:
 

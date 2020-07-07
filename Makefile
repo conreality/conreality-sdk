@@ -14,7 +14,9 @@ VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
 VERSION_PATCH = $(word 3,$(subst ., ,$(VERSION)))
 
+ZIG          ?= zig
 PANDOC        = pandoc
+YAMLLINT      = yamllint
 
 # The default target:
 
@@ -73,6 +75,14 @@ man: doc/man/man7/conreality.7
 doc/man/man7/conreality.7: doc/man/man7/conreality.7.md VERSION
 	sed -e "s:@VERSION@:$(VERSION):;" < $< | $(PANDOC) -s -t man -o $@
 
+lint: lint-yaml lint-zig
+
+lint-yaml:
+	@find etc -name '*.yaml' | sort | xargs $(YAMLLINT) -c etc/yamllint.yaml
+
+lint-zig:
+	@find src -name '*.zig' | sort | xargs $(ZIG) fmt --check
+
 clean:
 	@rm -Rf $(builddir) build dist zig-cache *~
 
@@ -84,6 +94,7 @@ maintainer-clean: clean
 
 .PHONY: default all pkgconfig
 .PHONY: test check installdirs install installcheck uninstall
+.PHONY: lint lint-yaml lint-zig
 .PHONY: clean distclean mostlyclean maintainer-clean
 .SECONDARY:
 .SUFFIXES:

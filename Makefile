@@ -12,6 +12,8 @@ VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
 VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
 VERSION_PATCH = $(word 3,$(subst ., ,$(VERSION)))
 
+PANDOC        = pandoc
+
 # The default target:
 
 default: all
@@ -30,8 +32,10 @@ check:
 
 installdirs:
 	install -d $(DESTDIR)$(libdir)
+	install -d $(DESTDIR)$(man7dir)
 
 install: installdirs
+	install -c -m 0644 doc/man/man7/$(PACKAGE).7 $(DESTDIR)$(man7dir)
 	@$(MAKE) -C c install
 	@$(MAKE) -C cpp install
 
@@ -40,6 +44,7 @@ installcheck:
 # Rules for uninstallation:
 
 uninstall:
+	-rm -f $(DESTDIR)$(man7dir)/$(PACKAGE).7
 	@$(MAKE) -C c uninstall
 	@$(MAKE) -C cpp uninstall
 
@@ -48,6 +53,11 @@ uninstall:
 dist:
 
 # Rules for development:
+
+man: doc/man/man7/conreality.7
+
+doc/man/man7/conreality.7: doc/man/man7/conreality.7.md VERSION
+	sed -e "s:@VERSION@:$(VERSION):;" < $< | $(PANDOC) -s -t man -o $@
 
 clean:
 	@rm -Rf build dist zig-cache *~

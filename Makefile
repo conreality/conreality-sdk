@@ -69,7 +69,7 @@ include etc/pkgconfig/rules.mk
 
 test: check
 
-check:
+check: all
 
 .PHONY: test check
 

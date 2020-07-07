@@ -1,6 +1,7 @@
 # Conreality Software Development Kit (SDK)
 
 [![Project license](https://img.shields.io/badge/license-Public%20Domain-blue.svg)](https://unlicense.org)
+[![Continuous integration](https://github.com/conreality/conreality-sdk/workflows/Continuous%20integration/badge.svg)](https://github.com/conreality/conreality-sdk/actions?query=workflow%3A%22Continuous+integration%22)
 
 ## Prerequisites
 
@@ -18,7 +19,9 @@ $ git clone --recursive https://github.com/conreality/conreality-sdk.git
 
 $ cd conreality-sdk
 
-$ make && sudo make install
+$ make
+
+$ sudo make install
 ```
 
 ## See Also

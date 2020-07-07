@@ -1,0 +1,30 @@
+---
+name: Continuous integration
+on: push
+jobs:
+  lint:
+    name: Lint source code
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Set up Zig
+        uses: goto-bus-stop/setup-zig@default
+        with:
+          version: 0.6.0
+      - name: Install yamlllint
+        run: sudo apt install yamllint
+      - name: Check syntax
+        run: make lint
+  unit-test:
+    name: Run unit tests
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v2
+      - name: Set up Zig
+        uses: goto-bus-stop/setup-zig@default
+        with:
+          version: 0.6.0
+      - name: Run test suite
+        run: make check

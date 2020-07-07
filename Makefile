@@ -1,3 +1,11 @@
+# This is free and unencumbered software released into the public domain.
+
+PACKAGE      := conreality
+VERSION      := $(shell cat VERSION)
+VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
+VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
+VERSION_PATCH = $(word 3,$(subst ., ,$(VERSION)))
+
 builddir      = build
 
 prefix        = /usr/local
@@ -8,19 +16,17 @@ datarootdir   = $(prefix)/share
 mandir        = $(datarootdir)/man
 man7dir       = $(mandir)/man7
 
-PACKAGE      := conreality
-VERSION      := $(shell cat VERSION)
-VERSION_MAJOR = $(word 1,$(subst ., ,$(VERSION)))
-VERSION_MINOR = $(word 2,$(subst ., ,$(VERSION)))
-VERSION_PATCH = $(word 3,$(subst ., ,$(VERSION)))
-
 ZIG          ?= zig
 PANDOC        = pandoc
 YAMLLINT      = yamllint
 
+SOURCES      := VERSION build.zig $(wildcard src/*.zig src/*/*.zig src/*/*/*.zig)
+
 # The default target:
 
 default: all
+
+.PHONY: default
 
 # Rules for compilation:
 
@@ -29,11 +35,35 @@ $(builddir):
 
 $(builddir)/$(PACKAGE).pc: $(builddir)
 
-all: pkgconfig
+$(builddir)/lib$(PACKAGE).a: $(SOURCES)
+	$(ZIG) build static
+	@touch $@
+
+$(builddir)/lib$(PACKAGE).so.$(VERSION): $(SOURCES)
+	$(ZIG) build shared
+	@touch $@
+
+$(builddir)/lib$(PACKAGE).$(VERSION).dylib: $(SOURCES)
+	$(ZIG) build shared
+	@touch $@
+
+$(builddir)/lib$(PACKAGE).dll: $(SOURCES)
+	$(ZIG) build shared
+	@touch $@
+
+all: static shared pkgconfig
+
+static:
+	$(ZIG) build static
+
+shared:
+	$(ZIG) build shared
 
 pkgconfig: $(builddir)/$(PACKAGE).pc
 
 include etc/pkgconfig/rules.mk
+
+.PHONY: all static shared pkgconfig
 
 # Rules for verification:
 
@@ -41,38 +71,74 @@ test: check
 
 check:
 
+.PHONY: test check
+
 # Rules for installation:
+
+install: installdirs install-headers install-static install-shared install-pkgconfig install-manpages
+
+install-headers:
+	@[ -f c/Makefile ] && $(MAKE) -C c install || true
+	@[ -f cpp/Makefile ] && $(MAKE) -C cpp install || true
+
+install-static: $(builddir)/lib$(PACKAGE).a
+	install -c -m 0644 $< $(DESTDIR)$(libdir)
+
+install-shared:
+	[ -f $(builddir)/lib$(PACKAGE).so.$(VERSION) ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).so.$(VERSION) $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/lib$(PACKAGE).$(VERSION).dylib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).$(VERSION).dylib $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/lib$(PACKAGE).dll ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).dll $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/lib$(PACKAGE).lib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).lib $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/lib$(PACKAGE).pdb ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).pdb $(DESTDIR)$(libdir) || true
+
+install-pkgconfig: $(builddir)/$(PACKAGE).pc
+	install -c -m 0644 $< $(DESTDIR)$(libdir)/pkgconfig
+
+install-manpages: doc/man/man7/$(PACKAGE).7
+	install -c -m 0644 $< $(DESTDIR)$(man7dir)
 
 installdirs:
 	install -d $(DESTDIR)$(libdir)
 	install -d $(DESTDIR)$(libdir)/pkgconfig
 	install -d $(DESTDIR)$(man7dir)
 
-install: pkgconfig installdirs
-	install -c -m 0644 $(builddir)/$(PACKAGE).pc $(DESTDIR)$(libdir)/pkgconfig
-	install -c -m 0644 doc/man/man7/$(PACKAGE).7 $(DESTDIR)$(man7dir)
-	@[ -f c/Makefile ] && $(MAKE) -C c install || true
-	@[ -f cpp/Makefile ] && $(MAKE) -C cpp install || true
-
 installcheck:
+
+.PHONY: install install-headers install-static install-shared install-pkgconfig install-manpages installdirs installcheck
 
 # Rules for uninstallation:
 
-uninstall:
-	-rm -f $(DESTDIR)$(man7dir)/$(PACKAGE).7
-	-rm -f $(DESTDIR)$(libdir)/pkgconfig/$(PACKAGE).pc
+uninstall: uninstall-headers uninstall-static uninstall-shared uninstall-pkgconfig uninstall-manpages
+
+uninstall-headers:
 	@[ -f c/Makefile ] && $(MAKE) -C c uninstall || true
 	@[ -f cpp/Makefile ] && $(MAKE) -C cpp uninstall || true
+
+uninstall-static:
+	-rm -f $(DESTDIR)$(libdir)/lib$(PACKAGE).a
+
+uninstall-shared:
+	-rm -f $(DESTDIR)$(libdir)/lib$(PACKAGE).*
+
+uninstall-pkgconfig:
+	-rm -f $(DESTDIR)$(libdir)/pkgconfig/$(PACKAGE).pc
+
+uninstall-manpages:
+	-rm -f $(DESTDIR)$(man7dir)/$(PACKAGE).7
+
+.PHONY: uninstall uninstall-headers uninstall-static uninstall-shared uninstall-pkgconfig uninstall-manpages
 
 # Rules for distribution:
 
 dist:
 
+.PHONY: dist
+
 # Rules for development:
 
-man: doc/man/man7/conreality.7
+manpages: doc/man/man7/$(PACKAGE).7
 
-doc/man/man7/conreality.7: doc/man/man7/conreality.7.md VERSION
+doc/man/man7/$(PACKAGE).7: doc/man/man7/$(PACKAGE).7.md VERSION
 	sed -e "s:@VERSION@:$(VERSION):;" < $< | $(PANDOC) -s -t man -o $@
 
 lint: lint-yaml lint-zig
@@ -92,9 +158,7 @@ mostlyclean: clean
 
 maintainer-clean: clean
 
-.PHONY: default all pkgconfig
-.PHONY: test check installdirs install installcheck uninstall
-.PHONY: lint lint-yaml lint-zig
-.PHONY: clean distclean mostlyclean maintainer-clean
+.PHONY: manpages lint lint-yaml lint-zig clean distclean mostlyclean maintainer-clean
+
 .SECONDARY:
 .SUFFIXES:

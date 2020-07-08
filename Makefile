@@ -81,20 +81,20 @@ install-headers:
 	@[ -f c/Makefile ] && $(MAKE) -C c install || true
 	@[ -f cpp/Makefile ] && $(MAKE) -C cpp install || true
 
-install-static: $(builddir)/lib$(PACKAGE).a
+install-static: $(builddir)/lib$(PACKAGE).a installdirs
 	install -c -m 0644 $< $(DESTDIR)$(libdir)
 
-install-shared:
+install-shared: installdirs
 	[ -f $(builddir)/lib$(PACKAGE).so.$(VERSION) ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).so.$(VERSION) $(DESTDIR)$(libdir) || true
 	[ -f $(builddir)/lib$(PACKAGE).$(VERSION).dylib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).$(VERSION).dylib $(DESTDIR)$(libdir) || true
 	[ -f $(builddir)/lib$(PACKAGE).dll ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).dll $(DESTDIR)$(libdir) || true
 	[ -f $(builddir)/lib$(PACKAGE).lib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).lib $(DESTDIR)$(libdir) || true
 	[ -f $(builddir)/lib$(PACKAGE).pdb ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).pdb $(DESTDIR)$(libdir) || true
 
-install-pkgconfig: $(builddir)/$(PACKAGE).pc
+install-pkgconfig: $(builddir)/$(PACKAGE).pc installdirs
 	install -c -m 0644 $< $(DESTDIR)$(libdir)/pkgconfig
 
-install-manpages: doc/man/man7/$(PACKAGE).7
+install-manpages: doc/man/man7/$(PACKAGE).7 installdirs
 	install -c -m 0644 $< $(DESTDIR)$(man7dir)
 
 installdirs:

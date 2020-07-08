@@ -1,0 +1,20 @@
+#!/usr/bin/make -f
+export LC_ALL=C.UTF-8
+#export DH_VERBOSE=1
+
+include /usr/share/dpkg/architecture.mk
+
+prefix      = /usr
+exec_prefix = $(prefix)
+libdir      = $(exec_prefix)/lib/$(DEB_HOST_MULTIARCH)
+
+%:
+	dh $@
+
+# Support standard Debian multiarch installation locations:
+override_dh_auto_install:
+	dh_auto_install -- prefix=$(prefix) libdir=$(libdir)
+
+# strip(1) on Debian fails on the libconreality.a produced by Zig:
+override_dh_strip:
+	dh_strip --no-automatic-dbgsym --exclude=libconreality.a

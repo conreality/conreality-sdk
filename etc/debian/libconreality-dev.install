@@ -1,0 +1,4 @@
+usr/include/conreality.h
+usr/include/conreality.hpp
+usr/lib/*/libconreality.a
+usr/lib/*/pkgconfig/conreality.pc

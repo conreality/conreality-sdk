@@ -1,0 +1,8 @@
+# explicit is better than implicit
+conreality source: binary-control-field-duplicates-source *
+
+# we endeavor to track the latest policy
+conreality source: newer-standards-version *
+
+# the test suite does not exist yet
+conreality source: testsuite-autopkgtest-missing

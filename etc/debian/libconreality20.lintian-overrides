@@ -1,0 +1,11 @@
+# not supported by Zig at this time
+libconreality20: hardening-no-fortify-functions usr/lib/*/libconreality.so.*
+
+# not supported by Zig at this time
+libconreality20: hardening-no-bindnow usr/lib/*/libconreality.so.*
+
+# not packaged for the Debian archive yet
+libconreality20: new-package-should-close-itp-bug
+
+# no symbol versioning information at this time
+libconreality20: no-symbols-control-file usr/lib/*/libconreality.so.*

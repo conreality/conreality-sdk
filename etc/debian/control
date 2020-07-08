@@ -1,0 +1,78 @@
+Source: conreality
+Priority: optional
+Section: libs
+Maintainer: Arto Bendiken <arto@conreality.com>
+Build-Depends:
+ debhelper (>= 10),
+ dpkg-dev (>= 1.19),
+ dh-exec (>=0.3)
+Standards-Version: 4.5.0
+Homepage: https://github.com/conreality/conreality-sdk
+Vcs-Git: https://github.com/conreality/conreality-sdk.git
+Vcs-Browser: https://github.com/conreality/conreality-sdk
+
+Package: conreality
+Architecture: any
+Section: devel
+Multi-Arch: same
+Depends:
+ libconreality20 (= ${binary:Version}),
+ libconreality-dev (= ${binary:Version}),
+ ${misc:Depends}
+Description: Conreality SDK: Meta
+ Conreality Software Development Kit (SDK) for Linux.
+ .
+ This metapackage installs the full Conreality SDK.
+ .
+ For the shared runtime library, see the libconreality20 package.
+ For the static development library, see the libconreality-dev package.
+ For the documentation, see the libconreality-doc package.
+
+Package: libconreality20
+Architecture: amd64
+Section: libs
+Multi-Arch: same
+Depends:
+ ${shlibs:Depends},
+ ${misc:Depends}
+Provides: conreality
+Suggests: libconreality-dev (= ${binary:Version}),
+Description: Conreality SDK: Shared Libraries
+ Conreality Software Development Kit (SDK) for Linux.
+ .
+ This package contains the shared runtime library.
+ .
+ For the static development library, you want the libconreality-dev package.
+
+Package: libconreality-dev
+Architecture: amd64
+Section: libdevel
+Multi-Arch: same
+Depends:
+ libconreality20 (= ${binary:Version}),
+ ${misc:Depends}
+Enhances: libconreality20 (= ${binary:Version})
+Recommends: libconreality-doc (= ${binary:Version})
+Suggests: manpages-dev
+Description: Conreality SDK: Header Files and Development Libraries
+ Conreality Software Development Kit (SDK) for Linux.
+ .
+ This package contains the symlinks, headers, and object files needed to
+ compile and link programs using the Conreality SDK. It also contains the
+ static library.
+ .
+ For the shared runtime library, you need only the libconreality20 package.
+
+Package: libconreality-doc
+Architecture: all
+Section: doc
+Multi-Arch: foreign
+Depends: ${misc:Depends}
+Enhances: libconreality-dev (= ${binary:Version})
+Description: Conreality SDK: Documentation
+ Conreality Software Development Kit (SDK) for Linux.
+ .
+ This package contains the documentation for the Conreality SDK.
+ .
+ For the shared runtime library, you need only the libconreality20 package.
+ For the static development library, you want the libconreality-dev package.

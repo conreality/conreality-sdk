@@ -17,5 +17,8 @@ zig-cache/
 # Build output
 build/
 
+# Debian packaging
+debian/
+
 # Distributables
 dist/

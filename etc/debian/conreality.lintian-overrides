@@ -1,0 +1,5 @@
+# not packaged for the Debian archive yet
+conreality: new-package-should-close-itp-bug
+
+# the description is fine
+conreality: description-starts-with-package-name

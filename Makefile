@@ -78,8 +78,8 @@ check: all
 install: installdirs install-headers install-static install-shared install-pkgconfig install-manpages
 
 install-headers:
-	@[ -f c/Makefile ] && $(MAKE) -C c install || true
-	@[ -f cpp/Makefile ] && $(MAKE) -C cpp install || true
+	@[ -f c/Makefile ] && $(MAKE) -w -C c install || true
+	@[ -f cpp/Makefile ] && $(MAKE) -w -C cpp install || true
 
 install-static: $(builddir)/lib$(PACKAGE).a installdirs
 	install -c -m 0644 $< $(DESTDIR)$(libdir)
@@ -111,8 +111,8 @@ installcheck:
 uninstall: uninstall-headers uninstall-static uninstall-shared uninstall-pkgconfig uninstall-manpages
 
 uninstall-headers:
-	@[ -f c/Makefile ] && $(MAKE) -C c uninstall || true
-	@[ -f cpp/Makefile ] && $(MAKE) -C cpp uninstall || true
+	@[ -f c/Makefile ] && $(MAKE) -w -C c uninstall || true
+	@[ -f cpp/Makefile ] && $(MAKE) -w -C cpp uninstall || true
 
 uninstall-static:
 	-rm -f $(DESTDIR)$(libdir)/lib$(PACKAGE).a

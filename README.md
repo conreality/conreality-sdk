@@ -6,9 +6,11 @@
 ## Prerequisites
 
 - [Zig][] [0.6.0][]
+- [GNU Make][] 3.81+
 
-[Zig]:   https://ziglang.org
-[0.6.0]: https://ziglang.org/download/#release-0.6.0
+[Zig]:      https://ziglang.org
+[0.6.0]:    https://ziglang.org/download/#release-0.6.0
+[GNU Make]: https://www.gnu.org/software/make/
 
 ## Installation
 

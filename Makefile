@@ -138,7 +138,7 @@ dist:
 
 manpages: doc/man/man7/$(PACKAGE).7
 
-doc/man/man7/$(PACKAGE).7: doc/man/man7/$(PACKAGE).7.md VERSION
+doc/man/man7/$(PACKAGE).7: | doc/man/man7/$(PACKAGE).7.md VERSION
 	sed -e "s:@VERSION@:$(VERSION):;" < $< | $(PANDOC) -s -t man -o $@
 
 lint: lint-yaml lint-zig

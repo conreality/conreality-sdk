@@ -1,0 +1,9 @@
+include_dir=3rdparty/windows/x64/include_dir
+
+sys_include_dir=3rdparty/windows/x64/sys_include_dir
+
+crt_dir=3rdparty/windows/x64/crt_dir
+
+msvc_lib_dir=3rdparty/windows/x64/msvc_lib_dir
+
+kernel32_lib_dir=3rdparty/windows/x64/kernel32_lib_dir

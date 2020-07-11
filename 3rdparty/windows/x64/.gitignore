@@ -1,0 +1,6 @@
+# Universal CRT & Visual Studio headers and libraries
+crt_dir
+include_dir
+kernel32_lib_dir
+msvc_lib_dir
+sys_include_dir

@@ -1,0 +1,9 @@
+include_dir=3rdparty/android/sysroot/usr/include
+
+sys_include_dir=3rdparty/android/sysroot/usr/include
+
+crt_dir=3rdparty/android/sysroot/usr/lib/i686-linux-android/16
+
+msvc_lib_dir=
+
+kernel32_lib_dir=

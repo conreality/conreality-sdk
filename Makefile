@@ -24,7 +24,7 @@ SOURCES      := VERSION build.zig $(wildcard src/*.zig src/*/*.zig src/*/*/*.zig
 
 # The default target:
 
-default: all
+default: static shared pkgconfig
 
 .PHONY: default
 
@@ -51,8 +51,6 @@ $(builddir)/lib$(PACKAGE).dll: $(SOURCES)
 	$(ZIG) build shared
 	@touch $@
 
-all: static shared pkgconfig
-
 static:
 	$(ZIG) build static
 
@@ -63,7 +61,55 @@ pkgconfig: $(builddir)/$(PACKAGE).pc
 
 include etc/pkgconfig/rules.mk
 
-.PHONY: all static shared pkgconfig
+.PHONY: static shared pkgconfig
+
+# Rules for cross-compilation:
+
+all: android linux macos windows
+
+.PHONY: all
+
+android: x86_64-android arm64-android arm-android
+
+arm-android:
+	$(ZIG) build android/arm
+
+arm64-android:
+	$(ZIG) build android/arm64
+
+x86_64-android:
+	$(ZIG) build android/x86_64
+
+.PHONY: android arm-android arm64-android x86_64-android
+
+linux: x86_64-linux arm64-linux arm-linux
+
+arm-linux:
+	$(ZIG) build linux/arm
+
+arm64-linux:
+	$(ZIG) build linux/arm64
+
+x86_64-linux:
+	$(ZIG) build linux/x86_64
+
+.PHONY: linux arm-linux arm64-linux x86_64-linux
+
+macosx: macos
+macos: x86_64-macos
+
+x86_64-macosx: x86_64-macos
+x86_64-macos:
+	$(ZIG) build macos/x86_64
+
+.PHONY: macos x86_64-macos macosx x86_64-macosx
+
+windows: x86_64-windows
+
+x86_64-windows:
+	$(ZIG) build windows/x86_64
+
+.PHONY: windows x86_64-windows
 
 # Rules for verification:
 
@@ -81,15 +127,16 @@ install-headers:
 	@[ -f c/Makefile ] && $(MAKE) -w -C c install || true
 	@[ -f cpp/Makefile ] && $(MAKE) -w -C cpp install || true
 
-install-static: $(builddir)/lib$(PACKAGE).a installdirs
-	install -c -m 0644 $< $(DESTDIR)$(libdir)
+install-static: installdirs
+	[ -f $(builddir)/lib$(PACKAGE).a ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).a $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/lib$(PACKAGE).lib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).lib $(DESTDIR)$(libdir) || true
 
 install-shared: installdirs
 	[ -f $(builddir)/lib$(PACKAGE).so.$(VERSION) ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).so.$(VERSION) $(DESTDIR)$(libdir) || true
 	[ -f $(builddir)/lib$(PACKAGE).$(VERSION).dylib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).$(VERSION).dylib $(DESTDIR)$(libdir) || true
-	[ -f $(builddir)/lib$(PACKAGE).dll ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).dll $(DESTDIR)$(libdir) || true
-	[ -f $(builddir)/lib$(PACKAGE).lib ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).lib $(DESTDIR)$(libdir) || true
-	[ -f $(builddir)/lib$(PACKAGE).pdb ] && install -c -m 0644 $(builddir)/lib$(PACKAGE).pdb $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/$(PACKAGE).dll ] && install -c -m 0644 $(builddir)/$(PACKAGE).dll $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/$(PACKAGE).lib ] && install -c -m 0644 $(builddir)/$(PACKAGE).lib $(DESTDIR)$(libdir) || true
+	[ -f $(builddir)/$(PACKAGE).pdb ] && install -c -m 0644 $(builddir)/$(PACKAGE).pdb $(DESTDIR)$(libdir) || true
 
 install-pkgconfig: $(builddir)/$(PACKAGE).pc installdirs
 	install -c -m 0644 $< $(DESTDIR)$(libdir)/pkgconfig
